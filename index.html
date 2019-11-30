@@ -56,6 +56,8 @@
                 </td>
                 <td>
                     <button onclick="copy_to_clipboard('result')">Copy</button>
+                    <button onclick="share()">Share</button>
+                    <span id="share_link" hidden></span>
                 </td>
                 <td align="right">
                     <a href="https://github.com/ggerganov/dot-to-ascii">Github</a>
@@ -153,6 +155,40 @@ digraph {
                 update = null;
             }
 
+            function share() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        link = document.getElementById('share_link');
+                        link.innerHTML = window.location.href.split('?')[0] + '?src_hash=' + xhttp.responseText;
+                        link.hidden = false;
+                        copy_to_clipboard('share_link');
+                        var url = link.innerHTML;
+                        link.innerHTML = 'Link copied to clipboard: ' + url;
+                    }
+                };
+                xhttp.open("GET", "dot-save.php?src=" + encodeURIComponent(editor.getValue()), true);
+                xhttp.send();
+
+                update = null;
+            }
+
+            function load(hash) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var textarea = document.getElementById('result');
+                        editor.setValue(xhttp.responseText || 'null');
+                        textarea.style.color = "#000";
+                        submit();
+                    }
+                };
+                xhttp.open("GET", "dot-load.php?src_hash=" + hash);
+                xhttp.send();
+
+                update = null;
+            }
+
             function init() {
                 var textarea = document.getElementById('code');
                 editor = CodeMirror.fromTextArea(textarea, {
@@ -169,7 +205,14 @@ digraph {
                     update = setTimeout(submit, 1000);
                 });
 
-                set_sample("sample 0");
+                const urlParams = new URLSearchParams(window.location.search);
+                const src_hash = urlParams.get('src_hash');
+
+                if (src_hash) {
+                    load(src_hash);
+                } else {
+                    set_sample("sample 0");
+                }
             }
 
             init();

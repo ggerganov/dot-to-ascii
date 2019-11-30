@@ -1,0 +1,175 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="lib/codemirror.css">
+        <script src="lib/codemirror.js"></script>
+        <script src="mode/dot/dot.js"></script>
+
+        <style>
+            table {
+                padding: 0;
+                margin: 0;
+                    position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+                        height:100%;width:100%;
+            }
+            .result {
+                height: 100%;
+                background: #eee;
+                border: 1px solid #eee;
+                padding: 16px;
+            }
+            .CodeMirror {
+                height: 100%;
+                border: 1px solid #eee;
+            }
+            .CodeMirror-scroll {
+                height: 100%;
+                max-height:calc(100vh - 1.5em);
+                max-width:100%;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <table>
+            <tr>
+                <td width=40%>
+                    <textarea id="code">
+                    </textarea>
+                </td>
+                <td colspan=2>
+                    <pre class="result" id="result">
+                    </pre>
+                </td>
+            </tr>
+            <tr height=1.5em>
+                <td align="right">
+                    <select onchange="set_sample(this.value)">
+                        <option>sample 0</option>
+                        <option>sample 1</option>
+                        <option>sample 2</option>
+                        <option>sample 3</option>
+                    </select>
+                </td>
+                <td>
+                    <button onclick="copy_to_clipboard('result')">Copy</button>
+                </td>
+                <td align="right">
+                    <a href="https://github.com/ggerganov/dot-to-ascii">Github</a>
+                </td>
+            </tr>
+        </table>
+
+        <script>
+            var editor = null;
+            var update = null;
+
+            var samples = {
+                "sample 0" :
+`# sample 0
+
+digraph {
+    subgraph cluster_0 {
+        a0 -> a1 -> a2 -> a3;
+        label = "process #1";
+    }
+
+    subgraph cluster_1 {
+        b0 -> b1 -> b2 -> b3;
+        label = "process #2";
+    }
+
+    start -> a0;
+    start -> b0;
+    a1 -> b3;
+    b2 -> a3;
+    a3 -> a0;
+    a3 -> end;
+    b3 -> end;
+}`,
+                "sample 1" :
+`# sample 1
+
+digraph {
+    a -> b;
+    b -> c;
+    b -> d;
+}`,
+                "sample 2" :
+`# sample 2
+
+graph {
+	rankdir = LR;
+
+    a -- b;
+    b -- c;
+    a -- c;
+    d -- c;
+    e -- c;
+    e -- a;
+}`,
+                "sample 3" :
+`# sample 3
+
+digraph {
+    a -> b [ label = "0.2", weight = "0.2" ];
+    a -> c [ label = "0.4", weight = "0.4" ];
+    c -> b [ label = "0.6", weight = "0.6" ];
+    c -> e [ label = "0.6", weight = "0.6" ];
+    e -> e [ label = "0.1", weight = "0.1" ];
+    e -> b [ label = "0.7", weight = "0.7" ];
+}`,
+            };
+
+            function set_sample(value) {
+                editor.setValue(samples[value]);
+                submit();
+            }
+
+            function copy_to_clipboard(containerid) {
+                var range = document.createRange();
+                range.selectNode(document.getElementById(containerid));
+                window.getSelection().removeAllRanges(); // clear current selection
+                window.getSelection().addRange(range); // to select text
+                document.execCommand("copy");
+                window.getSelection().removeAllRanges();// to deselect
+            }
+
+            function submit() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var textarea = document.getElementById('result');
+                        textarea.innerHTML = xhttp.responseText || 'null';
+                        textarea.style.color = "#000";
+                    }
+                };
+                xhttp.open("GET", "dot-to-ascii.php?src=" + encodeURIComponent(editor.getValue()), true);
+                xhttp.send();
+
+                update = null;
+            }
+
+            function init() {
+                var textarea = document.getElementById('code');
+                editor = CodeMirror.fromTextArea(textarea, {
+                    lineNumbers: true
+                });
+
+                editor.on('keypress', function(instance, event) {
+                    document.getElementById('result').style.color = "#999";
+                    if (update) {
+                        clearTimeout(update);
+                    }
+                    update = setTimeout(submit, 1000);
+                });
+
+                set_sample("sample 0");
+            }
+
+            init();
+
+        </script>
+
+    </body>
+</html>

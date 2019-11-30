@@ -161,7 +161,7 @@ digraph {
                     indentUnit: 4,
                 });
 
-                editor.on('keypress', function(instance, event) {
+                editor.on('keyup', function(instance, event) {
                     document.getElementById('result').style.color = "#999";
                     if (update) {
                         clearTimeout(update);

@@ -11,8 +11,14 @@
             table {
                 padding: 0;
                 margin: 0;
-                position: absolute; top: 0; bottom: 0; left: 0; right: 0;
-                height:100%;width:100%;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 100%;
+                width: 100%;
+                table-layout:fixed;
             }
             .result {
                 height: 100%;
@@ -22,12 +28,13 @@
             }
             .CodeMirror {
                 height: 100%;
+                width: 100%;
                 border: 1px solid #eee;
             }
             .CodeMirror-scroll {
                 height: 100%;
-                max-height:calc(100vh - 1.5em);
-                max-width:100%;
+                max-height: calc(100vh - 1.5em);
+                max-width: 100%;
             }
         </style>
     </head>

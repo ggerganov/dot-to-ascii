@@ -227,6 +227,7 @@ digraph {
                     if (update) {
                         clearTimeout(update);
                     }
+                    document.getElementById('share_link').innerHTML = '';
                     update = setTimeout(submit, 1000);
                 });
 

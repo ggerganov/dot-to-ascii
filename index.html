@@ -64,6 +64,8 @@
                 <td>
                     <button onclick="copy_to_clipboard('result')">Copy</button>
                     <button onclick="share()">Share</button>
+                    <button onclick="change_font_size(0.90)">Font -</button>
+                    <button onclick="change_font_size(1.11)">Font +</button>
                     <span id="share_link" hidden></span>
                 </td>
                 <td align="right">
@@ -178,6 +180,18 @@ digraph {
                 xhttp.send();
 
                 update = null;
+            }
+
+            function change_font_size(scale) {
+                var textarea = document.getElementById('result');
+
+                if (textarea.style.fontSize == '') {
+                    textarea.style.fontSize = '100%';
+                }
+
+                var new_size = parseFloat(textarea.style.fontSize) * scale + '%';
+
+                textarea.style.fontSize = new_size;
             }
 
             function load(hash) {

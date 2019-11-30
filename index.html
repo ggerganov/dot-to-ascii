@@ -42,6 +42,9 @@
     <body>
 
         <table>
+            <col style="width: 40%;"/>
+            <col style="width: 55%;"/>
+            <col style="width: 5%;"/>
             <tr>
                 <td width=40%>
                     <textarea id="code">
@@ -63,10 +66,10 @@
                 </td>
                 <td>
                     <button onclick="copy_to_clipboard('result')">Copy</button>
-                    <button onclick="share()">Share</button>
                     <button onclick="change_font_size(0.90)">Font -</button>
                     <button onclick="change_font_size(1.11)">Font +</button>
-                    <span id="share_link" hidden></span>
+                    <button onclick="share()">Share</button>
+                    <span with=100% id="share_link" hidden></span>
                 </td>
                 <td align="right">
                     <a href="https://github.com/ggerganov/dot-to-ascii">Github</a>
@@ -142,11 +145,12 @@ digraph {
 
             function copy_to_clipboard(containerid) {
                 var range = document.createRange();
+                var selection = window.getSelection();
                 range.selectNode(document.getElementById(containerid));
-                window.getSelection().removeAllRanges(); // clear current selection
-                window.getSelection().addRange(range); // to select text
+                selection.removeAllRanges();
+                selection.addRange(range);
                 document.execCommand("copy");
-                window.getSelection().removeAllRanges();// to deselect
+                selection.removeAllRanges();
             }
 
             function submit() {
@@ -173,7 +177,7 @@ digraph {
                         link.hidden = false;
                         copy_to_clipboard('share_link');
                         var url = link.innerHTML;
-                        link.innerHTML = 'Link copied to clipboard: ' + url;
+                        link.innerHTML = url;
                     }
                 };
                 xhttp.open("GET", "dot-save.php?src=" + encodeURIComponent(editor.getValue()), true);

@@ -57,6 +57,8 @@
             </tr>
             <tr height=1.5em>
                 <td align="right">
+                    <button onclick="change_font_size_editor(0.90)">Font -</button>
+                    <button onclick="change_font_size_editor(1.11)">Font +</button>
                     <select onchange="set_sample(this.value)">
                         <option>sample 0</option>
                         <option>sample 1</option>
@@ -67,8 +69,8 @@
                 <td>
                     <button onclick="copy_to_clipboard('result')">Copy</button>
                     <button onclick="toggle_boxart()">Boxart</button>
-                    <button onclick="change_font_size(0.90)">Font -</button>
-                    <button onclick="change_font_size(1.11)">Font +</button>
+                    <button onclick="change_font_size_result(0.90)">Font -</button>
+                    <button onclick="change_font_size_result(1.11)">Font +</button>
                     <button onclick="share()">Share</button>
                     <span with=100% id="share_link" hidden></span>
                 </td>
@@ -193,16 +195,29 @@ digraph {
                 update = null;
             }
 
-            function change_font_size(scale) {
-                var textarea = document.getElementById('result');
+            function change_font_size_editor(scale) {
+                var style = editor.getWrapperElement().style;
 
-                if (textarea.style.fontSize == '') {
-                    textarea.style.fontSize = '100%';
+                if (style['font-size'] == '') {
+                    style['font-size'] = '100%';
                 }
 
-                var new_size = parseFloat(textarea.style.fontSize) * scale + '%';
+                var new_size = parseFloat(style['font-size']) * scale + '%';
 
-                textarea.style.fontSize = new_size;
+                style['font-size'] = new_size;
+            }
+
+            function change_font_size_result(scale) {
+                var textarea = document.getElementById('result');
+                var style = textarea.style;
+
+                if (style.fontSize == '') {
+                    style.fontSize = '100%';
+                }
+
+                var new_size = parseFloat(style.fontSize) * scale + '%';
+
+                style.fontSize = new_size;
             }
 
             function load(hash) {

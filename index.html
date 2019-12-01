@@ -66,6 +66,7 @@
                 </td>
                 <td>
                     <button onclick="copy_to_clipboard('result')">Copy</button>
+                    <button onclick="toggle_boxart()">Boxart</button>
                     <button onclick="change_font_size(0.90)">Font -</button>
                     <button onclick="change_font_size(1.11)">Font +</button>
                     <button onclick="share()">Share</button>
@@ -80,6 +81,7 @@
         <script>
             var editor = null;
             var update = null;
+            var boxart = true;
 
             var samples = {
                 "sample 0" :
@@ -153,6 +155,11 @@ digraph {
                 selection.removeAllRanges();
             }
 
+            function toggle_boxart() {
+                boxart = !boxart;
+                submit();
+            }
+
             function submit() {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
@@ -162,7 +169,7 @@ digraph {
                         textarea.style.color = "#000";
                     }
                 };
-                xhttp.open("GET", "dot-to-ascii.php?src=" + encodeURIComponent(editor.getValue()), true);
+                xhttp.open("GET", "dot-to-ascii.php?boxart=" + (boxart ? '1' : '0') + "&src=" + encodeURIComponent(editor.getValue()), true);
                 xhttp.send();
 
                 update = null;

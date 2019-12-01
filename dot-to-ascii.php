@@ -5,6 +5,10 @@
 
 $cmd = "graph-easy --from=dot --as_ascii";
 
+if (isset($_GET['boxart']) && $_GET['boxart'] == '1') {
+    $cmd = "graph-easy --from=dot --as_boxart";
+}
+
 $descriptorspec = array(
     0 => array("pipe", "r"),
     1 => array("pipe", "w")

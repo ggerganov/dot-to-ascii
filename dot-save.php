@@ -7,4 +7,5 @@
     file_put_contents($file, $data);
 
     echo $hash;
+
 ?>

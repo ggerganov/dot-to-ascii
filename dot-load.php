@@ -1,11 +1,7 @@
 <?php
 
     function is_valid($hash) {
-        if (preg_match("/^([a-f0-9]{8})$/", $hash) == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return (preg_match("/^([a-f0-9]{8})$/", $hash) == 1);
     }
 
     $hash = $_GET['src_hash'];

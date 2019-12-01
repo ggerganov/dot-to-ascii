@@ -81,8 +81,8 @@
             var editor = null;
             var update = null;
 
-            // disable boxart on safari/iOS by default
-            var boxart = !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            // disable boxart by default on Apple devices
+            var boxart = !/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
 
             var samples = {
                 "sample 0" :

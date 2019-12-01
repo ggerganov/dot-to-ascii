@@ -80,7 +80,9 @@
         <script>
             var editor = null;
             var update = null;
-            var boxart = true;
+
+            // disable boxart on safari/iOS by default
+            var boxart = !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
             var samples = {
                 "sample 0" :

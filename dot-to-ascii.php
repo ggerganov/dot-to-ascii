@@ -3,10 +3,12 @@
 // you need to insall "graph-easy" to use this script
 // for more info: https://stackoverflow.com/questions/3211801/graphviz-and-ascii-output
 
-$cmd = "graph-easy --from=dot --as_ascii";
+$cmd = "graph-easy --from=dot --timeout=10";
 
 if (isset($_GET['boxart']) && $_GET['boxart'] == '1') {
-    $cmd = "graph-easy --from=dot --as_boxart";
+    $cmd .= " --as_boxart";
+} else {
+    $cmd .= " --as_ascii";
 }
 
 $descriptorspec = array(

@@ -27,7 +27,7 @@ if (is_resource($process)) {
     $return_value = proc_close($process);
 
     header('Content-type: text/plain');
-    echo $result;
+    echo htmlspecialchars($result);
 }
 
 ?>

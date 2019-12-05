@@ -2,59 +2,26 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <title>dot-to-ascii</title>
+
         <link rel="shortcut icon" href="favicon.ico">
 
         <link rel="stylesheet" href="lib/codemirror.css">
+        <link rel="stylesheet" href="dot-to-ascii.css">
+
         <script src="lib/codemirror.js"></script>
         <script src="mode/dot/dot.js"></script>
-        <script src="resizable.js"></script>
-
-        <style>
-            table {
-                padding: 0;
-                margin: 0;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 100%;
-                width: 100%;
-                table-layout:fixed;
-            }
-            .result {
-                height: 100%;
-                background: #eee;
-                border: 1px solid #eee;
-                padding: 16px;
-            }
-            .CodeMirror {
-                height: 100%;
-                width: calc(100% - 8px);
-                border: 1px solid #eee;
-            }
-            .CodeMirror-scroll {
-                max-height: calc(100vh - 3.0em);
-                max-width: 100%;
-            }
-        </style>
+        <script src="split.min.js"></script>
+        <script src="samples.js"></script>
     </head>
 
     <body>
 
-        <table>
-            <tr>
-                <td>
-                    <textarea id="code">
-                    </textarea>
-                </td>
-                <td colspan=2>
-                    <pre class="result" id="result">
-                    </pre>
-                </td>
-            </tr>
-            <tr height=1.5em>
-                <td align="right" style="padding-right: 6px">
+        <div class="content">
+            <div class="split cell-editor">
+                <div class="cell-editor-main">
+                    <textarea id="code"></textarea>
+                </div>
+                <div class="cell-editor-actions">
                     <button onclick="change_font_size_editor(0.90)">Font -</button>
                     <button onclick="change_font_size_editor(1.11)">Font +</button>
                     <select onchange="set_sample(this.value)">
@@ -63,20 +30,27 @@
                         <option>sample 2</option>
                         <option>sample 3</option>
                     </select>
-                </td>
-                <td>
+                </div>
+            </div>
+            <div class="split cell-result">
+                <div class="cell-result-main">
+                    <pre class="result" id="result"> </pre>
+                </div>
+                <div class="cell-result-actions">
                     <button onclick="copy_to_clipboard('result')">Copy</button>
                     <button onclick="toggle_boxart()">Boxart</button>
                     <button onclick="change_font_size_result(0.90)">Font -</button>
                     <button onclick="change_font_size_result(1.11)">Font +</button>
                     <button onclick="share()">Share</button>
                     <span with=100% id="share_link" hidden></span>
-                </td>
-                <td align="right">
-                    <a href="https://github.com/ggerganov/dot-to-ascii">Github</a>
-                </td>
-            </tr>
-        </table>
+                </div>
+                <div class="cell-about">
+                    <a class="nav-link" href="https://github.com/ggerganov/dot-to-ascii"><span class="d-none d-sm-inline">View on GitHub </span>
+                        <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
 
         <script>
             var editor = null;
@@ -84,63 +58,6 @@
 
             // disable boxart by default on Apple devices
             var boxart = !/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
-
-            var samples = {
-                "sample 0" :
-`# sample 0
-
-digraph {
-    subgraph cluster_0 {
-        a0 -> a1 -> a2 -> a3;
-        label = "process #1";
-    }
-
-    subgraph cluster_1 {
-        b0 -> b1 -> b2 -> b3;
-        label = "process #2";
-    }
-
-    start -> a0;
-    start -> b0;
-    a1 -> b3;
-    b2 -> a3;
-    a3 -> a0;
-    a3 -> end;
-    b3 -> end;
-}`,
-                "sample 1" :
-`# sample 1
-
-digraph {
-    a -> b;
-    b -> c;
-    b -> d;
-}`,
-                "sample 2" :
-`# sample 2
-
-graph {
-	rankdir = LR;
-
-    a -- b;
-    b -- c;
-    a -- c;
-    d -- c;
-    e -- c;
-    e -- a;
-}`,
-                "sample 3" :
-`# sample 3
-
-digraph {
-    a -> b [ label = "0.2" ];
-    a -> c [ label = "0.4" ];
-    c -> b [ label = "0.6" ];
-    c -> e [ label = "0.6" ];
-    e -> e [ label = "0.1" ];
-    e -> b [ label = "0.7" ];
-}`,
-            };
 
             function set_sample(value) {
                 editor.setValue(samples[value]);
@@ -199,10 +116,10 @@ digraph {
                 var style = editor.getWrapperElement().style;
 
                 if (style['font-size'] == '') {
-                    style['font-size'] = '100%';
+                    style['font-size'] = '12px';
                 }
 
-                var new_size = parseFloat(style['font-size']) * scale + '%';
+                var new_size = parseFloat(style['font-size']) * scale + 'px';
 
                 style['font-size'] = new_size;
             }
@@ -236,7 +153,15 @@ digraph {
                 update = null;
             }
 
+            window.addEventListener('resize', () => {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            });
+
             function init() {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+
                 var textarea = document.getElementById('code');
                 editor = CodeMirror.fromTextArea(textarea, {
                     lineNumbers: true,
@@ -262,8 +187,10 @@ digraph {
                     set_sample("sample 0");
                 }
 
-                var table = document.getElementsByTagName('table')[0];
-                resizableGrid(table);
+                Split(['.cell-editor', '.cell-result'], {
+                    gutterSize: 5,
+                    sizes: [20,80]
+                });
             }
 
             init();

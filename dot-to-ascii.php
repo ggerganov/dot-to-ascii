@@ -20,7 +20,20 @@ $process = proc_open($cmd, $descriptorspec, $pipes);
 
 if (is_resource($process)) {
 
-    fwrite($pipes[0], urldecode($_GET['src']));
+    $src = urldecode($_GET['src']);
+
+    // remove comments : //, /*, */
+    $pattern = '/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/';
+    $src = preg_replace($pattern, '', $src);
+
+    // remove comments : #
+    $pattern = '/(?:(?<!\")\#.*)/';
+    $src = preg_replace($pattern, '', $src);
+
+    // remove new lines
+    $src = preg_replace("/\r|\n/", " ", $src);
+
+    fwrite($pipes[0], $src);
     fclose($pipes[0]);
 
     $result = stream_get_contents($pipes[1]);

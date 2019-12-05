@@ -22,12 +22,8 @@ if (is_resource($process)) {
 
     $src = urldecode($_GET['src']);
 
-    // remove comments : //, /*, */
-    $pattern = '/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/';
-    $src = preg_replace($pattern, '', $src);
-
-    // remove comments : #
-    $pattern = '/(?:(?<!\")\#.*)/';
+    // remove comments : #, //, /*, */
+    $pattern = '/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))|(?:(?<!\:|\\\|\'|\")\#.*)/';
     $src = preg_replace($pattern, '', $src);
 
     // remove new lines

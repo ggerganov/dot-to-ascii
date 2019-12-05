@@ -5,12 +5,12 @@ var samples = {
 digraph {
     subgraph cluster_0 {
         a0 -> a1 -> a2 -> a3;
-        label = "process #1";
+        label = "process \#1";
     }
 
     subgraph cluster_1 {
         b0 -> b1 -> b2 -> b3;
-        label = "process #2";
+        label = "process \#2";
     }
 
     start -> a0;

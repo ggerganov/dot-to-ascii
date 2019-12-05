@@ -21,7 +21,7 @@ button, select {
     transition-duration: 0.4s;
     background-color: #eee;
     color: black;
-    border: 2px solid #aaa;
+    border: 1px solid #aaa;
 }
 select {
     padding: 5px 10px;

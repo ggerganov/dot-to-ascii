@@ -8,7 +8,7 @@
 
     if (is_valid($hash) == false) return 0;
 
-    $file = "/tmp/".$hash;
+    $file = "/tmp/dot-to-ascii-".$hash.".dot";
 
     echo file_get_contents($file);
 

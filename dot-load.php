@@ -1,15 +1,17 @@
 <?php
 
-    function is_valid($hash) {
-        return (preg_match("/^([a-f0-9]{8})$/", $hash) == 1);
-    }
+include('config.php');
 
-    $hash = $_GET['src_hash'];
+function is_valid_crc32($hash) {
+    return (preg_match("/^([a-f0-9]{8})$/", $hash) == 1);
+}
 
-    if (is_valid($hash) == false) return 0;
+$hash = $_GET['src_hash'];
 
-    $file = "/tmp/dot-to-ascii-".$hash.".dot";
+if (is_valid_crc32($hash) == false) return 0;
 
-    echo file_get_contents($file);
+$file = DTA_DATA_SHARE."/dot-to-ascii-".$hash.".dot";
+
+echo file_get_contents($file);
 
 ?>

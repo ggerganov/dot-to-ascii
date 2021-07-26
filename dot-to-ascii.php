@@ -1,5 +1,7 @@
 <?php
 
+include('config.php');
+
 // you need to insall "graph-easy" to use this script
 // for more info: https://stackoverflow.com/questions/3211801/graphviz-and-ascii-output
 
@@ -21,6 +23,12 @@ $process = proc_open($cmd, $descriptorspec, $pipes);
 if (is_resource($process)) {
 
     $src = urldecode($_GET['src']);
+
+    // store request
+    $hash = hash('sha256', $src);
+    $file = DTA_DATA_REQUESTS."/dot-to-ascii-".$hash.".dot";
+
+    file_put_contents($file, $src);
 
     // remove comments : #, //, /*, */
     $pattern = '/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))|(?:(?<!\:|\\\|\'|\")\#.*)/';

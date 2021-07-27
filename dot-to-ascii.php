@@ -26,9 +26,10 @@ if (is_resource($process)) {
 
     // store request
     $hash = hash('sha256', $src);
-    $file = DTA_DATA_REQUESTS."/dot-to-ascii-".$hash.".dot";
+    $file_dot = DTA_DATA_REQUESTS."/dot-to-ascii-".$hash.".dot";
+    $file_txt = DTA_DATA_REQUESTS."/dot-to-ascii-".$hash.".txt";
 
-    file_put_contents($file, $src);
+    file_put_contents($file_dot, $src);
 
     // remove comments : #, //, /*, */
     $pattern = '/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))|(?:(?<!\:|\\\|\'|\")\#.*)/';
@@ -44,6 +45,10 @@ if (is_resource($process)) {
     fclose($pipes[1]);
 
     $return_value = proc_close($process);
+
+    if ($result) {
+        file_put_contents($file_txt, $result);
+    }
 
     header('Content-type: text/plain');
     echo htmlspecialchars($result);

@@ -6,8 +6,8 @@ Try it here: https://dot-to-ascii.ggerganov.com
 
 ## How it works?
 
-- The [index.html](index.html#L82-L95) page sends XHR requests containing your Dot input to the [dot-to-ascii.php](dot-to-ascii.php) script
-- The [dot-to-ascii.php](dot-to-ascii.php#L8) script runs the [Graph::Easy](https://metacpan.org/pod/Graph::Easy) command line tool to produce a text diagram from the provided Dot input
+- The [index.html](index.html#L82-L95) page sends XHR requests containing your Graphviz input to the [dot-to-ascii.php](dot-to-ascii.php) script
+- The [dot-to-ascii.php](dot-to-ascii.php#L8) script runs the [Graph::Easy](https://metacpan.org/pod/Graph::Easy) command line tool to produce a text diagram from the provided Graphviz input
 - The result is returned back to [index.html](index.html#L82-L95) where it is displayed in a `<pre>` tag
 
 ## API

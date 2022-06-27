@@ -71,3 +71,14 @@ print(graph_ascii)
   └───────────────────── │   │
                          └───┘
 ```
+
+## Run locally with docker
+
+This uses the minimal Dockerfile with the default apache config etc. Not
+suitable for production use.
+
+``` bash
+$ docker build -t dot-to-ascii .
+$ docker run --rm -d --name dot-to-ascii -p 8080:80 dot-to-ascii
+$ # open localhost:8080 in your browser
+```
